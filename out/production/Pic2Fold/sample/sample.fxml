@@ -1,0 +1,38 @@
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ProgressBar?>
+<GridPane fx:controller="sample.Controller"
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10"
+          vgap="10">
+    <Label GridPane.columnIndex="0"
+           GridPane.rowIndex="1">Путь до картинок
+    </Label>
+    <Label GridPane.columnIndex="0"
+           GridPane.rowIndex="2">Путь до будущего каталога
+    </Label>
+    <TextField GridPane.columnIndex="1"
+               GridPane.rowIndex="1"
+               fx:id="path1"></TextField>
+    <TextField GridPane.columnIndex="1"
+               GridPane.rowIndex="2"
+               fx:id="path2"></TextField>
+    <Button GridPane.columnIndex="2"
+            GridPane.rowIndex="1"
+            onAction="#Path1ButtonClicked">...
+    </Button>
+    <Button GridPane.columnIndex="2"
+            GridPane.rowIndex="2"
+            onAction="#Path2ButtonClicked">...
+    </Button>
+    <Button GridPane.columnIndex="0"
+            GridPane.rowIndex="3"
+            onAction="#SortButtonClicked">Сортировать
+    </Button>
+    <ProgressBar GridPane.columnIndex="1"
+                 GridPane.rowIndex="3"
+                 fx:id="progressBar"
+                 progress="0.0" >
+    </ProgressBar>
+</GridPane>
