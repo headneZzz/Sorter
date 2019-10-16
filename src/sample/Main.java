@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
 
 public class Main extends Application {
     private static Stage primaryStage;
@@ -13,7 +14,7 @@ public class Main extends Application {
         Main.primaryStage = stage;
     }
 
-    static public Stage getPrimaryStage() {
+    static Stage getPrimaryStage() {
         return Main.primaryStage;
     }
 
@@ -21,6 +22,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         setPrimaryStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("1.png")));
         primaryStage.setTitle("Pic2Fold");
         primaryStage.setScene(new Scene(root, 500, 250));
         primaryStage.show();

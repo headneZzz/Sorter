@@ -9,6 +9,7 @@ import javafx.concurrent.Task;
 import java.io.*;
 import java.nio.file.*;
 import java.util.stream.*;
+import java.util.*;
 
 import javafx.stage.DirectoryChooser;
 
@@ -29,7 +30,7 @@ public class Controller {
     protected void SortButtonClicked(ActionEvent event) throws IOException {
         cancel.setDisable(false);
         sort.setDisable(true);
-        copyFiles(new File(path1.getText()), new File(path2.getText()));
+        //copyFiles(new File(path1.getText()), new File(path2.getText()));
     }
 
     @FXML
@@ -39,13 +40,12 @@ public class Controller {
     }
 
 
-    private static void copyFiles(File source, File dest) throws IOException {
-        Stream<Path> files = Files.list(source.toPath());
-        for (int i = 0; i < files.count(); i++) {
-
-        }
-        String[] parts = source.toString().split("_");
-        Files.copy(new File(source.toString() + "\\1.txt").toPath(), new File(dest.toString() + "\\1.txt").toPath());
+    private void copyFiles(File source, File dest) throws IOException {
+        //Stream<Path> files = Files.list(source.toPath());
+        LinkedList<Files> files = new LinkedList<>();
+        //Files.list(source.toPath()).forEach((files.add);
+        String[] parts = source.getName().split("_");
+        Files.copy(new File(source.toString() + files.listIterator()).toPath(), new File(dest.toString() + parts[0] + parts[1] + parts[2] + source.getName()).toPath());
     }
 
     @FXML
