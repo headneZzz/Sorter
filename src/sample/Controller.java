@@ -2,10 +2,10 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
-
-import java.util.*;
 
 import javafx.stage.DirectoryChooser;
 
@@ -29,6 +29,11 @@ public class Controller {
     private Button cancel;
     @FXML
     private Button sort;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private ProgressBar progressBar;
+
     private static String[] filesName;
     private static int THREAD_COUNT = 4;
 
@@ -45,11 +50,16 @@ public class Controller {
             for (int i = threadId; i < filesName.length; i += THREAD_COUNT) {
                 if (filesName[i] != null)
                     try {
-                        Files.copy(new File(path1.getText() + "\\" + filesName[i]).toPath(), new File(path2.getText() + "\\" + filesName[i]).toPath(), REPLACE_EXISTING);
+                        String[] cat = filesName[i].split("_");
+                        new File(path2.getText() + File.separator + cat[0] + File.separator + cat[1] + File.separator + cat[2]).mkdirs();
+                        Files.copy(new File(path1.getText() + File.separator + filesName[i]).toPath(),
+                                new File(path2.getText() + File.separator + cat[0] + File.separator + cat[1] + File.separator + cat[2] + File.separator + filesName[i]).toPath(),
+                                REPLACE_EXISTING);
+                        progressBar.setProgress(i*100/filesName.length);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                System.out.println(threadId + " Moved:" + path1.getText() + "\\" + filesName[i]);
+                statusLabel.setText(threadId + " Moved:" + path1.getText() + "\\" + filesName[i]);
             }
         }
     }
@@ -62,20 +72,23 @@ public class Controller {
             e.printStackTrace();
         }
         filesName = new String[filesCount];
-        File direcory = new File(path1.getText());
+        File directory = new File(path1.getText());
         int i = 0;
-        for (final File fileEntry : Objects.requireNonNull(direcory.listFiles())) {
-            if (fileEntry.isFile()) filesName[i] = fileEntry.getName();
+        for (final File fileEntry : Objects.requireNonNull(directory.listFiles())) {
+            if (fileEntry.isFile()) {
+                filesName[i] = fileEntry.getName();
+            }
             i++;
         }
     }
 
     @FXML
     protected void SortButtonClicked(ActionEvent event) {
+        progressBar.setProgress(0);
         cancel.setDisable(false);
         sort.setDisable(true);
         listFilesForFolder();
-        System.out.println(Arrays.toString(filesName));
+
         for (int i = 0; i < THREAD_COUNT; i++) {
             Worker w = new Worker(i);
             w.start();
@@ -86,6 +99,7 @@ public class Controller {
     protected void CancelButtonClicked(ActionEvent event) {
         cancel.setDisable(true);
         sort.setDisable(false);
+        progressBar.setProgress(0);
     }
 
     private final DirectoryChooser directoryChooser = new DirectoryChooser();

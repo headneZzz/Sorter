@@ -18,6 +18,13 @@
            GridPane.rowSpan="1"
            GridPane.columnSpan="2">Путь до будущего каталога
     </Label>
+    <Label GridPane.columnIndex="0"
+           GridPane.columnSpan="1"
+           GridPane.rowIndex="3"
+           GridPane.rowSpan="1"
+           textFill="deepskyblue"
+           fx:id="statusLabel">
+    </Label>
     <TextField GridPane.columnIndex="2"
                GridPane.rowIndex="0"
                GridPane.rowSpan="1"

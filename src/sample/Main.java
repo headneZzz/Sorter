@@ -17,7 +17,6 @@ public class Main extends Application {
     static Stage getPrimaryStage() {
         return Main.primaryStage;
     }
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         setPrimaryStage(primaryStage);
