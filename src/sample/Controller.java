@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -50,17 +49,22 @@ public class Controller {
             for (int i = threadId; i < filesName.length; i += THREAD_COUNT) {
                 if (filesName[i] != null)
                     try {
-                        String[] cat = filesName[i].split("_");
-                        new File(path2.getText() + File.separator + cat[0] + File.separator + cat[1] + File.separator + cat[2]).mkdirs();
+                        String[] cat = filesName[i].split("-");
+                        StringBuilder path = new StringBuilder(path2.getText());
+                        for (int j = 0; j < cat.length - 1; j++) {
+                            path.append(File.separator).append(cat[j]);
+                        }
+                        new File(path.toString()).mkdirs();
                         Files.copy(new File(path1.getText() + File.separator + filesName[i]).toPath(),
-                                new File(path2.getText() + File.separator + cat[0] + File.separator + cat[1] + File.separator + cat[2] + File.separator + filesName[i]).toPath(),
+                                new File(path.toString() + File.separator + filesName[i]).toPath(),
                                 REPLACE_EXISTING);
-                        progressBar.setProgress(i*100/filesName.length);
+                        progressBar.setProgress(i * 100.0 / filesName.length);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                statusLabel.setText(threadId + " Moved:" + path1.getText() + "\\" + filesName[i]);
             }
+            sort.setDisable(false);
+            cancel.setDisable(true);
         }
     }
 
@@ -88,7 +92,6 @@ public class Controller {
         cancel.setDisable(false);
         sort.setDisable(true);
         listFilesForFolder();
-
         for (int i = 0; i < THREAD_COUNT; i++) {
             Worker w = new Worker(i);
             w.start();
