@@ -31,7 +31,7 @@ public class Controller {
     private ProgressBar progressBar;
 
     private static String[] filesName;
-    private static int THREAD_COUNT = 4;
+    private static int THREAD_COUNT = 20;
 
     class Worker extends Thread {
         private int threadId;
