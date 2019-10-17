@@ -2,7 +2,6 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
@@ -29,8 +28,6 @@ public class Controller {
     @FXML
     private Button sort;
     @FXML
-    private Label statusLabel;
-    @FXML
     private ProgressBar progressBar;
 
     private static String[] filesName;
@@ -49,7 +46,7 @@ public class Controller {
             for (int i = threadId; i < filesName.length; i += THREAD_COUNT) {
                 if (filesName[i] != null)
                     try {
-                        String[] cat = filesName[i].split("-");
+                        String[] cat = filesName[i].split("_");
                         StringBuilder path = new StringBuilder(path2.getText());
                         for (int j = 0; j < cat.length - 1; j++) {
                             path.append(File.separator).append(cat[j]);
@@ -58,7 +55,7 @@ public class Controller {
                         Files.copy(new File(path1.getText() + File.separator + filesName[i]).toPath(),
                                 new File(path.toString() + File.separator + filesName[i]).toPath(),
                                 REPLACE_EXISTING);
-                        progressBar.setProgress(i * 100.0 / filesName.length);
+                        progressBar.setProgress(i  / filesName.length);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

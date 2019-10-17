@@ -23,7 +23,7 @@ public class Main extends Application {
         setPrimaryStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("1.png")));
-        primaryStage.setTitle("Pic2Fold");
+        primaryStage.setTitle("Sorter");
         primaryStage.setScene(new Scene(root, 500, 250));
         primaryStage.show();
     }

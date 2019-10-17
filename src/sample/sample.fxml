@@ -11,12 +11,12 @@
     <Label GridPane.columnIndex="0"
            GridPane.rowIndex="0"
            GridPane.rowSpan="1"
-           GridPane.columnSpan="2">Путь до картинок
+           GridPane.columnSpan="2">Путь до файлов
     </Label>
     <Label GridPane.columnIndex="0"
            GridPane.rowIndex="1"
            GridPane.rowSpan="1"
-           GridPane.columnSpan="2">Путь до будущего каталога
+           GridPane.columnSpan="2">Путь до будущих каталогов
     </Label>
     <TextField GridPane.columnIndex="2"
                GridPane.rowIndex="0"
