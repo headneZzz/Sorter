@@ -25,6 +25,7 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("1.png")));
         primaryStage.setTitle("Sorter");
         primaryStage.setScene(new Scene(root, 500, 250));
+        primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.show();
     }
 

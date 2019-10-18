@@ -11,10 +11,9 @@ import javafx.stage.DirectoryChooser;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.*;
 
@@ -30,8 +29,9 @@ public class Controller {
     @FXML
     private ProgressBar progressBar;
 
-    private static String[] filesName;
     private static int THREAD_COUNT = 20;
+
+    private Worker[] workers = new Worker[THREAD_COUNT];
 
     class Worker extends Thread {
         private int threadId;
@@ -43,60 +43,63 @@ public class Controller {
         @Override
         public void run() {
             System.out.println("Started thread:" + threadId);
-            for (int i = threadId; i < filesName.length; i += THREAD_COUNT) {
-                if (filesName[i] != null)
+            for (int i = threadId; i < filesName.size(); i += THREAD_COUNT) {
+                if (filesName.get(i) != null)
                     try {
-                        String[] cat = filesName[i].split("_");
+                        String[] cat = filesName.get(i).split("_");
                         StringBuilder path = new StringBuilder(path2.getText());
                         for (int j = 0; j < cat.length - 1; j++) {
                             path.append(File.separator).append(cat[j]);
                         }
                         new File(path.toString()).mkdirs();
-                        Files.copy(new File(path1.getText() + File.separator + filesName[i]).toPath(),
-                                new File(path.toString() + File.separator + filesName[i]).toPath(),
+                        Files.move(new File(path1.getText() + File.separator + filesName.get(i)).toPath(),
+                                new File(path.toString() + File.separator + filesName.get(i)).toPath(),
                                 REPLACE_EXISTING);
-                        progressBar.setProgress(i  / filesName.length);
+                        progressBar.setProgress(i / filesName.size());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                System.out.println("Moved " + filesName.get(i));
             }
             sort.setDisable(false);
             cancel.setDisable(true);
         }
     }
 
-    private void listFilesForFolder() {
-        int filesCount = 0;
-        try (Stream<Path> files = Files.list(Paths.get(path1.getText()))) {
-            filesCount = (int) files.count();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        filesName = new String[filesCount];
-        File directory = new File(path1.getText());
-        int i = 0;
-        for (final File fileEntry : Objects.requireNonNull(directory.listFiles())) {
-            if (fileEntry.isFile()) {
-                filesName[i] = fileEntry.getName();
+
+    private static List<String> filesName = new ArrayList<>();
+
+    private void listFilesForFolder(String directoryName) {
+        File directory = new File(directoryName);
+        for (File file : Objects.requireNonNull(directory.listFiles())) {
+            if (file.isFile()) {
+                filesName.add(file.getName());
+            } else if (file.isDirectory()) {
+                listFilesForFolder(file.getAbsolutePath());
             }
-            i++;
         }
     }
 
     @FXML
     protected void SortButtonClicked(ActionEvent event) {
-        progressBar.setProgress(0);
-        cancel.setDisable(false);
-        sort.setDisable(true);
-        listFilesForFolder();
-        for (int i = 0; i < THREAD_COUNT; i++) {
-            Worker w = new Worker(i);
-            w.start();
+        if (path1.getText() != null & path2.getText() != null) {
+            listFilesForFolder(path1.getText());
+            progressBar.setProgress(0);
+            cancel.setDisable(false);
+            sort.setDisable(true);
+            for (int i = 0; i < THREAD_COUNT; i++) {
+                Worker w = new Worker(i);
+                workers[i] = w;
+                w.start();
+            }
         }
     }
 
     @FXML
     protected void CancelButtonClicked(ActionEvent event) {
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            workers[i].interrupt();
+        }
         cancel.setDisable(true);
         sort.setDisable(false);
         progressBar.setProgress(0);
