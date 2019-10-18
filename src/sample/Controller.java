@@ -46,20 +46,20 @@ public class Controller {
             for (int i = threadId; i < filesName.size(); i += THREAD_COUNT) {
                 if (filesName.get(i) != null)
                     try {
-                        String[] cat = filesName.get(i).split("_");
+                        String[] cat = filesName.get(i).getName().split("_");
                         StringBuilder path = new StringBuilder(path2.getText());
                         for (int j = 0; j < cat.length - 1; j++) {
                             path.append(File.separator).append(cat[j]);
                         }
                         new File(path.toString()).mkdirs();
-                        Files.move(new File(path1.getText() + File.separator + filesName.get(i)).toPath(),
-                                new File(path.toString() + File.separator + filesName.get(i)).toPath(),
-                                REPLACE_EXISTING);
-                        progressBar.setProgress(i / filesName.size());
+                        Files.copy(filesName.get(i).toPath(),
+                                new File(path.toString() + File.separator + filesName.get(i).getName()).toPath(),
+                                REPLACE_EXISTING); // need change to move
+                        progressBar.setProgress(i / filesName.size()); //dont work
+                        System.out.println("Moved " + i + " of " + filesName.size() + " " + filesName.get(i));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                System.out.println("Moved " + filesName.get(i));
             }
             sort.setDisable(false);
             cancel.setDisable(true);
@@ -67,13 +67,13 @@ public class Controller {
     }
 
 
-    private static List<String> filesName = new ArrayList<>();
+    private static List<File> filesName = new ArrayList<>();
 
     private void listFilesForFolder(String directoryName) {
         File directory = new File(directoryName);
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             if (file.isFile()) {
-                filesName.add(file.getName());
+                filesName.add(file);
             } else if (file.isDirectory()) {
                 listFilesForFolder(file.getAbsolutePath());
             }
@@ -98,7 +98,7 @@ public class Controller {
     @FXML
     protected void CancelButtonClicked(ActionEvent event) {
         for (int i = 0; i < THREAD_COUNT; i++) {
-            workers[i].interrupt();
+            workers[i].stop(); //interrupt better, but not working
         }
         cancel.setDisable(true);
         sort.setDisable(false);
