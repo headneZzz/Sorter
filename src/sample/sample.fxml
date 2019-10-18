@@ -59,7 +59,6 @@
                  GridPane.rowIndex="2"
                  GridPane.rowSpan="1"
                  GridPane.columnSpan="1"
-                 fx:id="progressBar"
-                 progress="0.0">
+                 fx:id="progressBar">
     </ProgressBar>
 </GridPane>
