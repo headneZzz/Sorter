@@ -49,13 +49,13 @@ public class Controller {
             for (int i = threadId; i < filesName.size(); i += THREAD_COUNT) {
                 if (filesName.get(i) != null)
                     try {
-                        String[] cat = filesName.get(i).getName().split("-");
+                        String[] cat = filesName.get(i).getName().split("_");
                         StringBuilder path = new StringBuilder(path2.getText());
                         for (int j = 0; j < cat.length - 1; j++)
                             path.append(File.separator).append(cat[j]);
 
                         new File(path.toString()).mkdirs();
-                        Files.copy(filesName.get(i).toPath(),
+                        Files.move(filesName.get(i).toPath(),
                                 new File(path.toString() + File.separator + filesName.get(i).getName()).toPath(),
                                 REPLACE_EXISTING); // need change to move
                         Worker.sleep(50);
