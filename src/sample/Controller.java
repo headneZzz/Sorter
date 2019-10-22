@@ -31,6 +31,9 @@ public class Controller {
 
     private static int THREAD_COUNT = 20;
 
+    private double k;
+    private double count;
+
     private Worker[] workers = new Worker[THREAD_COUNT];
 
     class Worker extends Thread {
@@ -46,19 +49,26 @@ public class Controller {
             for (int i = threadId; i < filesName.size(); i += THREAD_COUNT) {
                 if (filesName.get(i) != null)
                     try {
-                        String[] cat = filesName.get(i).getName().split("_");
+                        String[] cat = filesName.get(i).getName().split("-");
                         StringBuilder path = new StringBuilder(path2.getText());
-                        for (int j = 0; j < cat.length - 1; j++) {
+                        for (int j = 0; j < cat.length - 1; j++)
                             path.append(File.separator).append(cat[j]);
-                        }
+
                         new File(path.toString()).mkdirs();
                         Files.copy(filesName.get(i).toPath(),
                                 new File(path.toString() + File.separator + filesName.get(i).getName()).toPath(),
                                 REPLACE_EXISTING); // need change to move
-                        progressBar.setProgress(i / filesName.size()); //dont work
-                        System.out.println("Moved " + i + " of " + filesName.size() + " " + filesName.get(i));
+                        Worker.sleep(50);
+                        synchronized (this) {
+                            count += k;
+                            progressBar.setProgress(count);
+                        }
+                        System.out.println("Moved " + (i + 1) + " of " + filesName.size() + " " + filesName.get(i));
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        System.out.println(threadId + " thread has been interrupted");
+                        break;
                     }
             }
             sort.setDisable(false);
@@ -70,6 +80,7 @@ public class Controller {
     private static List<File> filesName = new ArrayList<>();
 
     private void listFilesForFolder(String directoryName) {
+        filesName.clear();
         File directory = new File(directoryName);
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             if (file.isFile()) {
@@ -81,9 +92,11 @@ public class Controller {
     }
 
     @FXML
-    protected void SortButtonClicked(ActionEvent event) {
+    protected void SortButtonClicked(ActionEvent event) throws InterruptedException {
         if (path1.getText() != null & path2.getText() != null) {
             listFilesForFolder(path1.getText());
+            k = 1d / filesName.size();
+            count = 0;
             progressBar.setProgress(0);
             cancel.setDisable(false);
             sort.setDisable(true);
@@ -98,7 +111,7 @@ public class Controller {
     @FXML
     protected void CancelButtonClicked(ActionEvent event) {
         for (int i = 0; i < THREAD_COUNT; i++) {
-            workers[i].stop(); //interrupt better, but not working
+            workers[i].interrupt();
         }
         cancel.setDisable(true);
         sort.setDisable(false);
