@@ -58,7 +58,7 @@ public class Controller {
                         Files.move(filesName.get(i).toPath(),
                                 new File(path.toString() + File.separator + filesName.get(i).getName()).toPath(),
                                 REPLACE_EXISTING); // need change to move
-                        Worker.sleep(50);
+                        Worker.sleep(10);
                         synchronized (this) {
                             count += k;
                             progressBar.setProgress(count);
