@@ -92,7 +92,7 @@ public class Controller {
     }
 
     @FXML
-    protected void SortButtonClicked(ActionEvent event) throws InterruptedException {
+    protected void SortButtonClicked(ActionEvent event) {
         if (path1.getText() != null & path2.getText() != null) {
             listFilesForFolder(path1.getText());
             k = 1d / filesName.size();
