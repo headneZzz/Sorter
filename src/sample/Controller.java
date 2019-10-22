@@ -49,13 +49,13 @@ public class Controller {
             for (int i = threadId; i < filesName.size(); i += THREAD_COUNT) {
                 if (filesName.get(i) != null)
                     try {
-                        String[] cat = filesName.get(i).getName().split("-");
+                        String[] cat = filesName.get(i).getName().split("_");
                         StringBuilder path = new StringBuilder(path2.getText());
                         for (int j = 0; j < cat.length - 1; j++)
                             path.append(File.separator).append(cat[j]);
 
                         new File(path.toString()).mkdirs();
-                        Files.copy(filesName.get(i).toPath(),
+                        Files.move(filesName.get(i).toPath(),
                                 new File(path.toString() + File.separator + filesName.get(i).getName()).toPath(),
                                 REPLACE_EXISTING); // need change to move
                         Worker.sleep(50);
@@ -92,7 +92,7 @@ public class Controller {
     }
 
     @FXML
-    protected void SortButtonClicked(ActionEvent event) {
+    private void SortButtonClicked(ActionEvent event) {
         if (path1.getText() != null & path2.getText() != null) {
             listFilesForFolder(path1.getText());
             k = 1d / filesName.size();
@@ -109,7 +109,7 @@ public class Controller {
     }
 
     @FXML
-    protected void CancelButtonClicked(ActionEvent event) {
+    private void CancelButtonClicked(ActionEvent event) {
         for (int i = 0; i < THREAD_COUNT; i++) {
             workers[i].interrupt();
         }
@@ -120,7 +120,7 @@ public class Controller {
     private final DirectoryChooser directoryChooser = new DirectoryChooser();
 
     @FXML
-    protected void Path1ButtonClicked(ActionEvent event) {
+    private void Path1ButtonClicked(ActionEvent event) {
         try {
             File dir = directoryChooser.showDialog(Main.getPrimaryStage());
             path1.setText(dir.getAbsolutePath());
@@ -130,7 +130,7 @@ public class Controller {
     }
 
     @FXML
-    protected void Path2ButtonClicked(ActionEvent event) {
+    private void Path2ButtonClicked(ActionEvent event) {
         try {
             File dir = directoryChooser.showDialog(Main.getPrimaryStage());
             path2.setText(dir.getAbsolutePath());
