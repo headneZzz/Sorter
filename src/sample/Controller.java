@@ -57,7 +57,7 @@ public class Controller {
                         new File(path.toString()).mkdirs();
                         Files.move(filesName.get(i).toPath(),
                                 new File(path.toString() + File.separator + filesName.get(i).getName()).toPath(),
-                                REPLACE_EXISTING); // need change to move
+                                REPLACE_EXISTING);
                         Worker.sleep(10);
                         synchronized (this) {
                             count += k;
