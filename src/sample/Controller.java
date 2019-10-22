@@ -1,4 +1,4 @@
-package sample;
+package org.openjfx;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -49,13 +49,13 @@ public class Controller {
             for (int i = threadId; i < filesName.size(); i += THREAD_COUNT) {
                 if (filesName.get(i) != null)
                     try {
-                        String[] cat = filesName.get(i).getName().split("_");
+                        String[] cat = filesName.get(i).getName().split("-");
                         StringBuilder path = new StringBuilder(path2.getText());
                         for (int j = 0; j < cat.length - 1; j++)
                             path.append(File.separator).append(cat[j]);
 
                         new File(path.toString()).mkdirs();
-                        Files.move(filesName.get(i).toPath(),
+                        Files.copy(filesName.get(i).toPath(),
                                 new File(path.toString() + File.separator + filesName.get(i).getName()).toPath(),
                                 REPLACE_EXISTING); // need change to move
                         Worker.sleep(50);
@@ -115,20 +115,28 @@ public class Controller {
         }
         cancel.setDisable(true);
         sort.setDisable(false);
-        progressBar.setProgress(0);
     }
 
     private final DirectoryChooser directoryChooser = new DirectoryChooser();
 
     @FXML
     protected void Path1ButtonClicked(ActionEvent event) {
-        File dir = directoryChooser.showDialog(Main.getPrimaryStage());
-        path1.setText(dir.getAbsolutePath());
+        try {
+            File dir = directoryChooser.showDialog(Main.getPrimaryStage());
+            path1.setText(dir.getAbsolutePath());
+        } catch (NullPointerException e){
+            System.out.println("Specify a directory");
+        }
     }
 
     @FXML
     protected void Path2ButtonClicked(ActionEvent event) {
-        File dir = directoryChooser.showDialog(Main.getPrimaryStage());
-        path2.setText(dir.getAbsolutePath());
+        try {
+            File dir = directoryChooser.showDialog(Main.getPrimaryStage());
+            path2.setText(dir.getAbsolutePath());
+        } catch (NullPointerException e) {
+            System.out.println("Specify a directory");
+        }
+
     }
 }
