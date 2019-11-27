@@ -29,6 +29,12 @@ dependencies {
 }
 
 task run(type: JavaExec) {
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.base,javafx.controls,javafx.fxml,javafx.graphics'
+        ]
+    }
     classpath sourceSets.main.runtimeClasspath
     main = "sample.Main"
 }
@@ -43,7 +49,7 @@ compileJava {
     doFirst {
         options.compilerArgs = [
                 '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.controls,javafx.fxml,javafx.graphics'
+                '--add-modules', 'javafx.base,javafx.controls,javafx.fxml,javafx.graphics'
         ]
         classpath = files()
     }

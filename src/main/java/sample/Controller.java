@@ -71,6 +71,7 @@ public class Controller {
                         break;
                     }
             }
+            System.out.println("Thread "+threadId+" finished task!");
             sort.setDisable(false);
             cancel.setDisable(true);
         }
