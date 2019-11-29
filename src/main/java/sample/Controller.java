@@ -2,6 +2,7 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
@@ -18,6 +19,8 @@ import java.util.Objects;
 import static java.nio.file.StandardCopyOption.*;
 
 public class Controller {
+    @FXML
+    private ComboBox<String> comboBox;
     @FXML
     private TextField path1;
     @FXML
