@@ -4,6 +4,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.text.Text?>
 <GridPane fx:controller="sample.Controller"
           xmlns:fx="http://javafx.com/fxml"
           alignment="center"
@@ -24,16 +25,22 @@
            GridPane.rowSpan="1"
            GridPane.columnSpan="2">Путь до будущих каталогов
     </Label>
+    <Label GridPane.columnIndex="0"
+           GridPane.rowIndex="4"
+           GridPane.rowSpan="1"
+           GridPane.columnSpan="2"
+           textFill="red"
+           fx:id="errorLabel"></Label>
     <ComboBox GridPane.columnIndex="2"
-               GridPane.rowIndex="0"
-               GridPane.rowSpan="1"
-               GridPane.columnSpan="1"
-               fx:id="comboBox"></ComboBox>
+              GridPane.rowIndex="0"
+              GridPane.rowSpan="1"
+              GridPane.columnSpan="1"
+              fx:id="comboBox"></ComboBox>
     <TextField GridPane.columnIndex="2"
                GridPane.rowIndex="1"
                GridPane.rowSpan="1"
                GridPane.columnSpan="1"
-               fx:id="path1"></TextField>
+               fx:id="path1">\\server\Оцифровка\Фонды</TextField>
     <TextField GridPane.columnIndex="2"
                GridPane.rowIndex="2"
                GridPane.rowSpan="1"
