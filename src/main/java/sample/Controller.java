@@ -72,12 +72,16 @@ public class Controller implements Initializable {
             for (int i = threadId; i < filesName.size(); i += THREAD_COUNT) {
                 if (filesName.get(i) != null)
                     try {
+                        //Path to file in fonds
                         StringBuilder path = new StringBuilder(path2.getText());
+                        String[] cat = filesName.get(i).getName().split("_");
+                        for (int j = 0; j < cat.length - 1; j++)
+                            path.append(File.separator).append(cat[j]);
                         File newFile = new File(path.toString() + File.separator + filesName.get(i).getName());
 
                         //Insert into db
                         Connection connection = DriverManager.getConnection(url, "admin", "adminus");
-                        PreparedStatement prst = connection.prepareStatement("INSERT INTO digitization.Тест VALUES(DEFAULT,?,?,?,?)");
+                        PreparedStatement prst = connection.prepareStatement("INSERT INTO digitization.Оцифровка VALUES(DEFAULT,?,?,?,?)");
                         String filesGetName = filesName.get(i).getName();
                         String pathToFile = newFile.toString().startsWith("\\\\server") ? "#I:" + newFile.toString().substring(8) + '#' : '#' + newFile.toString() + '#';
                         String[] executors = comboBox.getValue().split(":");
@@ -90,9 +94,6 @@ public class Controller implements Initializable {
                         prst.executeUpdate();
 
                         //Move file
-                        String[] cat = filesName.get(i).getName().split("_");
-                        for (int j = 0; j < cat.length - 1; j++)
-                            path.append(File.separator).append(cat[j]);
                         new File(path.toString()).mkdirs();
                         Files.move(filesName.get(i).toPath(),
                                 newFile.toPath(),
@@ -111,8 +112,6 @@ public class Controller implements Initializable {
                         break;
                     } catch (SQLException e) {
                         System.out.println(e.getMessage());
-                    } catch (NullPointerException | IllegalStateException e) {
-                        errorLabel.setText("Укажите исполнителя");
                     }
             }
             System.out.println("Thread " + threadId + " finished task!");
@@ -137,22 +136,24 @@ public class Controller implements Initializable {
 
     @FXML
     private void SortButtonClicked(ActionEvent event) {
-        try {
-            errorLabel.setText("");
-            listFilesForFolder(path1.getText());
-            k = 1d / filesName.size();
-            count = 0;
-            progressBar.setProgress(0);
-            cancel.setDisable(false);
-            sort.setDisable(true);
-            for (int i = 0; i < THREAD_COUNT; i++) {
-                Worker w = new Worker(i);
-                workers[i] = w;
-                w.start();
+        if (comboBox.getValue() != null) {
+            try {
+                errorLabel.setText("");
+                listFilesForFolder(path1.getText());
+                k = 1d / filesName.size();
+                count = 0;
+                progressBar.setProgress(0);
+                cancel.setDisable(false);
+                sort.setDisable(true);
+                for (int i = 0; i < THREAD_COUNT; i++) {
+                    Worker w = new Worker(i);
+                    workers[i] = w;
+                    w.start();
+                }
+            } catch (NullPointerException e) {
+                errorLabel.setText("Укажите директорию");
             }
-        } catch (NullPointerException e) {
-            errorLabel.setText("Укажите директорию");
-        }
+        } else errorLabel.setText("Укажите исполнителя");
     }
 
     @FXML
@@ -171,8 +172,7 @@ public class Controller implements Initializable {
         try {
             File dir = directoryChooser.showDialog(Main.getPrimaryStage());
             path1.setText(dir.getAbsolutePath());
-        } catch (NullPointerException e) {
-            errorLabel.setText("Укажите директорию");
+        } catch (NullPointerException ignored) {
         }
     }
 
@@ -181,8 +181,7 @@ public class Controller implements Initializable {
         try {
             File dir = directoryChooser.showDialog(Main.getPrimaryStage());
             path2.setText(dir.getAbsolutePath());
-        } catch (NullPointerException e) {
-            errorLabel.setText("Укажите директорию");
+        } catch (NullPointerException ignored) {
         }
     }
 }
