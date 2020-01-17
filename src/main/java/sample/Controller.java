@@ -21,9 +21,9 @@ import static java.nio.file.StandardCopyOption.*;
 
 public class Controller implements Initializable {
     @FXML
-    private ComboBox<String> comboBox;
+    private ComboBox<String> comboBoxExecutors;
     @FXML
-    private TextField path1;
+    private ComboBox<String> comboBoxPath1;
     @FXML
     private TextField path2;
     @FXML
@@ -51,12 +51,17 @@ public class Controller implements Initializable {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM digitization.Исполнители");
             while (resultSet.next()) {
-                comboBox.getItems().addAll(resultSet.getString("Исполнитель") + " :" + resultSet.getInt("Код_исполнителя"));
+                comboBoxExecutors.getItems().addAll(resultSet.getString("Исполнитель") + " :" + resultSet.getInt("Код_исполнителя"));
             }
         } catch (SQLException e) {
             errorLabel.setText("Ошибка подлючения к базе данных");
             e.printStackTrace();
         }
+        comboBoxPath1.getItems().addAll(
+                "I:\\Оцифровка\\Гимодудинов",
+                "I:\\Оцифровка\\КолесниковаЕ",
+                "I:\\Оцифровка\\Степаненко",
+                "I:\\Оцифровка\\Фото");
     }
 
     class Worker extends Thread {
@@ -84,7 +89,7 @@ public class Controller implements Initializable {
                         PreparedStatement prst = connection.prepareStatement("INSERT INTO digitization.Оцифровка VALUES(DEFAULT,?,?,?,?)");
                         String filesGetName = filesName.get(i).getName();
                         String pathToFile = newFile.toString().startsWith("\\\\server") ? "#I:" + newFile.toString().substring(8) + '#' : '#' + newFile.toString() + '#';
-                        String[] executors = comboBox.getValue().split(":");
+                        String[] executors = comboBoxExecutors.getValue().split(":");
                         int executor = Integer.parseInt(executors[1]);
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         prst.setString(1, filesGetName.substring(0, filesGetName.length() - 4));
@@ -126,7 +131,7 @@ public class Controller implements Initializable {
         filesName.clear();
         File directory = new File(directoryName);
         for (File file : Objects.requireNonNull(directory.listFiles())) {
-            if (file.isFile()) {
+            if (file.isFile() && (file.toString().endsWith(".JPG") || file.toString().endsWith(".jpg"))) {
                 filesName.add(file);
             } else if (file.isDirectory()) {
                 listFilesForFolder(file.getAbsolutePath());
@@ -136,10 +141,10 @@ public class Controller implements Initializable {
 
     @FXML
     private void SortButtonClicked(ActionEvent event) {
-        if (comboBox.getValue() != null) {
+        if (comboBoxExecutors.getValue() != null) {
             try {
                 errorLabel.setText("");
-                listFilesForFolder(path1.getText());
+                listFilesForFolder(comboBoxPath1.getValue());
                 k = 1d / filesName.size();
                 count = 0;
                 progressBar.setProgress(0);
@@ -171,7 +176,8 @@ public class Controller implements Initializable {
     private void Path1ButtonClicked(ActionEvent event) {
         try {
             File dir = directoryChooser.showDialog(Main.getPrimaryStage());
-            path1.setText(dir.getAbsolutePath());
+            comboBoxPath1.getItems().add(dir.getAbsolutePath());
+            comboBoxPath1.setValue(dir.getAbsolutePath());
         } catch (NullPointerException ignored) {
         }
     }
