@@ -50,27 +50,27 @@
             GridPane.rowIndex="1"
             GridPane.rowSpan="1"
             GridPane.columnSpan="1"
-            onAction="#Path1ButtonClicked">...
+            onAction="#path1ButtonClicked">...
     </Button>
     <Button GridPane.columnIndex="3"
             GridPane.rowIndex="2"
             GridPane.rowSpan="1"
             GridPane.columnSpan="1"
-            onAction="#Path2ButtonClicked">...
+            onAction="#path2ButtonClicked">...
     </Button>
     <Button GridPane.columnIndex="0"
             GridPane.rowIndex="3"
             GridPane.rowSpan="1"
             GridPane.columnSpan="1"
             fx:id="sort"
-            onAction="#SortButtonClicked">Старт
+            onAction="#sortButtonClicked">Старт
     </Button>
     <Button GridPane.columnIndex="1"
             GridPane.rowIndex="3"
             GridPane.rowSpan="1"
             GridPane.columnSpan="1"
             fx:id="cancel"
-            onAction="#CancelButtonClicked"
+            onAction="#cancelButtonClicked"
             disable="true">Отмена
     </Button>
     <ProgressBar GridPane.columnIndex="2"
