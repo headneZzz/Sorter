@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
+    id 'org.beryx.jlink' version '2.12.0'
 }
 
 group 'Sample'
@@ -11,46 +13,26 @@ repositories {
     mavenCentral()
 }
 
-def currentOS = org.gradle.internal.os.OperatingSystem.current()
-def platform
-if (currentOS.isWindows()) {
-    platform = 'win'
-} else if (currentOS.isLinux()) {
-    platform = 'linux'
-} else if (currentOS.isMacOsX()) {
-    platform = 'mac'
+javafx {
+    version = "11"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 dependencies {
-    compile "org.openjfx:javafx-base:13:${platform}"
-    compile "org.openjfx:javafx-controls:13:${platform}"
-    compile "org.openjfx:javafx-fxml:13:${platform}"
-    compile "org.openjfx:javafx-graphics:13:${platform}"
 }
 
-task run(type: JavaExec) {
-    classpath sourceSets.main.runtimeClasspath
-    main = "sample.Main"
-}
 jar {
-    inputs.property("moduleName", moduleName)
     manifest {
-        attributes('Automatic-Module-Name': moduleName)
+        attributes 'Main-Class': 'sample.Launcher'
     }
-}
-compileJava {
-    inputs.property("moduleName", moduleName)
-    doFirst {
-        options.compilerArgs = [
-                '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.controls,javafx.fxml,javafx.graphics'
-        ]
-        classpath = files()
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
-task createJar(type: Copy) {
-    dependsOn 'jar'
-    into "$buildDir/libs"
-    from configurations.runtime
+jlink {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'sorter'
+    }
 }
