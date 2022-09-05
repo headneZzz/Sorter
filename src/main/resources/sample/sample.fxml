@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ComboBox?>
 <GridPane fx:controller="sample.Controller"
           xmlns:fx="http://javafx.com/fxml"
           alignment="center"
@@ -11,44 +12,61 @@
     <Label GridPane.columnIndex="0"
            GridPane.rowIndex="0"
            GridPane.rowSpan="1"
-           GridPane.columnSpan="2">Путь до файлов
+           GridPane.columnSpan="2">Исполнитель
     </Label>
     <Label GridPane.columnIndex="0"
            GridPane.rowIndex="1"
            GridPane.rowSpan="1"
-           GridPane.columnSpan="2">Путь до будущих каталогов
+           GridPane.columnSpan="2">Путь до файлов
     </Label>
+    <Label GridPane.columnIndex="0"
+           GridPane.rowIndex="2"
+           GridPane.rowSpan="1"
+           GridPane.columnSpan="2">Путь до фондов
+    </Label>
+    <Label GridPane.columnIndex="0"
+           GridPane.rowIndex="4"
+           GridPane.rowSpan="1"
+           GridPane.columnSpan="2"
+           textFill="red"
+           fx:id="errorLabel"></Label>
+    <ComboBox GridPane.columnIndex="2"
+              GridPane.rowIndex="0"
+              GridPane.rowSpan="1"
+              GridPane.columnSpan="1"
+              fx:id="comboBoxExecutors"></ComboBox>
+    <ComboBox GridPane.columnIndex="2"
+              GridPane.rowIndex="1"
+              GridPane.rowSpan="1"
+              GridPane.columnSpan="1"
+              fx:id="comboBoxPath1"></ComboBox>
     <TextField GridPane.columnIndex="2"
-               GridPane.rowIndex="0"
+               GridPane.rowIndex="2"
                GridPane.rowSpan="1"
                GridPane.columnSpan="1"
-               fx:id="path1"></TextField>
-    <TextField GridPane.columnIndex="2"
-               GridPane.rowIndex="1"
-               GridPane.rowSpan="1"
-               GridPane.columnSpan="1"
-               fx:id="path2"></TextField>
+               fx:id="path2">I:\Оцифровка\Фонды
+    </TextField>
     <Button GridPane.columnIndex="3"
-            GridPane.rowIndex="0"
+            GridPane.rowIndex="1"
             GridPane.rowSpan="1"
             GridPane.columnSpan="1"
             onAction="#Path1ButtonClicked">...
     </Button>
     <Button GridPane.columnIndex="3"
-            GridPane.rowIndex="1"
+            GridPane.rowIndex="2"
             GridPane.rowSpan="1"
             GridPane.columnSpan="1"
             onAction="#Path2ButtonClicked">...
     </Button>
     <Button GridPane.columnIndex="0"
-            GridPane.rowIndex="2"
+            GridPane.rowIndex="3"
             GridPane.rowSpan="1"
             GridPane.columnSpan="1"
             fx:id="sort"
-            onAction="#SortButtonClicked">Сортировать
+            onAction="#SortButtonClicked">Старт
     </Button>
     <Button GridPane.columnIndex="1"
-            GridPane.rowIndex="2"
+            GridPane.rowIndex="3"
             GridPane.rowSpan="1"
             GridPane.columnSpan="1"
             fx:id="cancel"
@@ -56,7 +74,7 @@
             disable="true">Отмена
     </Button>
     <ProgressBar GridPane.columnIndex="2"
-                 GridPane.rowIndex="2"
+                 GridPane.rowIndex="3"
                  GridPane.rowSpan="1"
                  GridPane.columnSpan="1"
                  fx:id="progressBar">
